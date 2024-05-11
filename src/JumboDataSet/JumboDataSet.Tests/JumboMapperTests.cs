@@ -40,10 +40,10 @@ namespace JumboDataSet.Tests
             dc = new DataColumn($"FIG{dv}03"); dt.Columns.Add(dc);
 
             //create rows for tables 1 and 3, and 2 will be empty
-            dr = dt.NewRow(); dr.ItemArray = [   "RESULTSET_01",      "A",    null,   null,   null,   null,   null]; dt.Rows.Add(dr);
-            dr = dt.NewRow(); dr.ItemArray = [   "RESULTSET_01",      "B",    null,   null,   null,   null,   null]; dt.Rows.Add(dr);
-            dr = dt.NewRow(); dr.ItemArray = [   "RESULTSET_01",      "C",    null,   null,   null,   null,   null]; dt.Rows.Add(dr);
-            dr = dt.NewRow(); dr.ItemArray = [   "RESULTSET_03",      null,   null,   null,   "D",    "E",    "F"];  dt.Rows.Add(dr);
+            dr = dt.NewRow(); dr.ItemArray = [   "01",      "A",    null,   null,   null,   null,   null]; dt.Rows.Add(dr);
+            dr = dt.NewRow(); dr.ItemArray = [   "01",      "B",    null,   null,   null,   null,   null]; dt.Rows.Add(dr);
+            dr = dt.NewRow(); dr.ItemArray = [   "01",      "C",    null,   null,   null,   null,   null]; dt.Rows.Add(dr);
+            dr = dt.NewRow(); dr.ItemArray = [   "03",      null,   null,   null,   "D",    "E",    "F"];  dt.Rows.Add(dr);
 
             ds.Tables.Add(dt);
             return ds;
@@ -212,6 +212,26 @@ namespace JumboDataSet.Tests
         {
             var sut = new JumboMapper();
             var result = sut.GetSuffixWithDelimiter(input);
+            Assert.IsTrue(string.Equals(result, target));
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void GetSuffix_InvalidArguments_ArgumentExceptionIsThrown(string input)
+        {
+            var sut = new JumboMapper();
+            Assert.Throws<ArgumentException>(() => sut.GetSuffix(input));
+        }
+
+        [Test]
+        [TestCase("FOO_1", "1")]
+        [TestCase("FOO_02", "02")]
+        [TestCase("FOO_003", "003")]
+        public void GetSuffix_ValidArguments_ReturnsExpectedResult(string input, string target)
+        {
+            var sut = new JumboMapper();
+            var result = sut.GetSuffix(input);
             Assert.IsTrue(string.Equals(result, target));
         }
     }
